@@ -17,67 +17,68 @@ var generatePassword = function() {
 
   // set password length based on user input
   var setLength = function() {
-    var length = window.prompt("How many characters should your password have?");
+    var inputLength = window.prompt("How many characters should your password have?");
     // validate user input
-    if (length < 8 || length > 128 || isNaN(length) || length - Math.floor(length) != 0) {
+    if (inputLength < 8 || inputLength > 128 || isNaN(inputLength) || inputLength - Math.floor(inputLength) != 0) {
       window.alert("Please choose a whole number between 8 and 128.");
-      setLength();
+      return setLength();
     } else {
-      return length;
+      return inputLength;
     };
   };
   var length = setLength();
-  console.log("User chose a password length of " + length + ".");
 
-  // set character types based on user input
-  var setCharTypes = function() {
-    charTypes = [];
-    
-    // ask user to include lowercase characters
-    var inclLowercase = window.confirm('Should your password include lowercase letters? Select "OK" to include or "CANCEL" to exclude.');
-    if (inclLowercase) {
-      charTypes.push("abcdefghijklmnopqrstuvwxyz")
-    };
+  // set available character types
+  var charTypes = [
+    {
+      name: "lowercase characters",
+      characters: "abcdefghijklmnopqrstuvwxyz"
+    },
+    {
+      name: "uppercase characters",
+      characters: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    },
+    {
+      name: "numbers",
+      characters: "0123456789"
+    },
+    {
+      name: "special characters",
+      characters: "`~!@#$%^&*()-_=+[]{}|;:',.<>?/ "
+    }
+  ];
 
-    // ask user to include uppercase characters
-    var inclUppercase = window.confirm('Should your password include uppercase letters? Select "OK" to include or "CANCEL" to exclude.');
-    if (inclUppercase) {
-      charTypes.push("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-    };
-
-    // ask user to include numbers
-    var inclNumbers = window.confirm('Should your password include numbers? Select "OK" to include or "CANCEL" to exclude.');
-    if (inclNumbers) {
-      charTypes.push("0123456789")
-    };
-
-    // ask user to include special characters
-    var inclSpecial = window.confirm('Should your password include special characters? Select "OK" to include or "CANCEL" to exclude.');
-    if (inclSpecial) {
-      charTypes.push("`~!@#$%^&*()-_=+[]{}|;:',.<>?/ ")
-    };
+  // set character types to use in password based on user input
+  var chosenCharTypes = [];
+  var chooseCharTypes = function() {
+    // loop through each item in charTypes and ask user to include or exclude
+    for (var i = 0; i < charTypes.length; i++) {
+      var include = window.confirm('Should your password include ' + charTypes[i].name +'? Select "OK" to include or "CANCEL" to exclude.');
+      // if user chooses to include, add to chosenCharTypes array
+      if (include) {
+        chosenCharTypes.push(charTypes[i].characters);
+      }
+    }
 
     // if user rejects all character types, reprompt
-    if (charTypes.length === 0) {
+    if (chosenCharTypes.length === 0) {
       window.alert("Please choose at least one type of character to include in your password.");
-      setCharTypes();
+      chooseCharTypes();
     }
   };
-  setCharTypes();
+  chooseCharTypes();
 
-    
   // randomize each character of password one at a time
   var password = "";
-  for (i = 0; i < length; i++) {
-    // generate random number between 0 and the number of items in charTypes array
-    charTypeSelector = Math.floor(Math.random() * charTypes.length);
-    // use random number to select set of characters based on index position
-    charTypeSelected = charTypes[charTypeSelector];
+  for (var i = 0; i < length; i++) {
+    // generate random number between 0 and the number of items in chosenCharTypes array
+    var charTypeSelector = Math.floor(Math.random() * chosenCharTypes.length);
+    // use random number to select set of characters based on index position in chosenCharTypes array
+    var selectedCharType = chosenCharTypes[charTypeSelector];
     // generate random number between 0 and the number of characters in the selected item's string length
-    charSelector = Math.floor(Math.random() * (charTypeSelected.length));
+    var charSelector = Math.floor(Math.random() * (selectedCharType.length));
     // use random number to select a single character from string and add it to end of password
-    password += charTypeSelected.charAt(charSelector);
+    password += selectedCharType.charAt(charSelector);
   }
-
   return password;
 };
