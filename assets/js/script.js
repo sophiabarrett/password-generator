@@ -15,7 +15,7 @@ generateBtn.addEventListener("click", writePassword);
 
 var generatePassword = function() {
 
-  // set password length based on user input
+  // set password length based on user input and store in variable
   var setLength = function() {
     var inputLength = window.prompt("How many characters should your password have?");
     // validate user input
@@ -26,8 +26,6 @@ var generatePassword = function() {
       return inputLength;
     };
   };
-
-  // store chosen password length in variable
   var length = setLength();
 
   // set available character types
@@ -68,7 +66,6 @@ var generatePassword = function() {
       pickCharTypes();
     }
   };
-
   pickCharTypes();
 
   // set password variable to empty
@@ -85,6 +82,6 @@ var generatePassword = function() {
     // use random number to select a single character from string and add it to end of password
     password += selectedCharType.charAt(charSelector);
   }
-  
+
   return password;
 };
